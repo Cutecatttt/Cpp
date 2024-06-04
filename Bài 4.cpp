@@ -15,10 +15,9 @@ typedef struct TreeNode
 TNODE* makeNewNode(char data)
 {
 	TNODE* p = (TNODE*)malloc(sizeof(TNODE));
-	if (NULL != p) {
-		p->info = data;
-		p->nextSibling = p->firstChild = NULL;
-	}	
+	p->info = data;
+	p->nextSibling = p->firstChild = NULL;
+	
 	return p;
 }
 
@@ -51,16 +50,15 @@ TNODE* findKey(TNODE* root, char key)
 {
 	// CODE tại đây
 	if(root==NULL) return NULL;
-	TNODE* n = NULL;
-	if(root->info == key) n = root;
-	if(n!=NULL) return n;
+	if(root->info == key) return root;
+	
 	TNODE* q = root->firstChild;
 	while(q!= NULL){
-	    findKey(q, key);
-	    if(n==NULL) break;
+	    TNODE* n = findKey(q, key);
+	    if(n!=NULL) return n;
 	    q = q-> nextSibling;
 	}
-	return n;
+	return NULL;
 }
 
 // Hàm đọc cây ban đầu vào từ input
@@ -313,7 +311,7 @@ int countTotalLeaves(TNODE* root)
 	int sum = 0;
 	if(q==NULL) sum=1;
 	while(q!=NULL){
-	    sum+=countTotalNodes(q);
+	    sum+=countTotalLeaves(q);
 	    q = q->nextSibling;
 	}
 	return sum;
