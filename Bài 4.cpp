@@ -51,14 +51,9 @@ TNODE* findKey(TNODE* root, char key)
 	// CODE tại đây
 	if(root==NULL) return NULL;
 	if(root->info == key) return root;
-	
-	TNODE* q = root->firstChild;
-	while(q!= NULL){
-	    TNODE* n = findKey(q, key);
-	    if(n!=NULL) return n;
-	    q = q-> nextSibling;
-	}
-	return NULL;
+	TNODE* ans = findKey(root->firstChild, key);
+	if(ans!=NULL) return ans;
+	return findKey(root->nextSibling, key);
 }
 
 // Hàm đọc cây ban đầu vào từ input
@@ -106,11 +101,13 @@ void addANewChildForNode(TNODE* root, char parentLabel, char newChildLabel)
 {
 	// Code tại đây
 	TNODE* parent = findKey(root, parentLabel);
-	if(parent->firstChild==NULL) parent->firstChild=makeNewNode(newChildLabel);
-	else{
+	if(parent == NULL) return;
+	TNODE* nNode = makeNewNode(newChildLabel);
+	if(parent->firstChild==NULL) parent->firstChild = nNode;
+    else{
     	TNODE* q = parent->firstChild;
     	while(q->nextSibling != NULL) q = q->nextSibling;
-    	q->nextSibling = makeNewNode(newChildLabel);
+    	q->nextSibling = nNode;
 	}
 }
 
@@ -143,18 +140,10 @@ void deleteTree(TNODE*& root)
 {
 	// Code tại đây
 	if(root == NULL) return;
-	
-	if(root->firstChild == NULL){
-	    free(root);
-	    return;
-	}
-	TNODE* q = root->firstChild;
-	while(q != NULL){
-	    TNODE* p=q->nextSibling;
-	    deleteTree(q);
-	    q = p;
-	}
-	return;
+	deleteTree(root->firstChild);
+	deleteTree(root->nextSibling);
+	free(root);
+	root = NULL;
 }
 
 // tim nut cha cua nut p tren cay co goc la root
@@ -177,9 +166,21 @@ TNODE* findParent(TNODE* root, char branchRootLabel) {
 void deleteABranch(TNODE* root, char branchRootLabel)
 {
 	// Code tại đây
-	TNODE* q = findKey(root, branchRootLabel);
-	deleteTree(q);
-	
+	TNODE* parent = findParent(root, branchRootLabel);
+	if(parent == NULL) return;
+	TNODE* cur = parent->firstChild;
+	if(cur->info == branchRootLabel){
+	    parent->firstChild = NULL;
+	    deleteTree(cur);
+	}
+	else{
+    	while(cur->nextSibling->info != branchRootLabel){
+    	    cur = cur->nextSibling;
+    	}
+    	TNODE* temp = cur->nextSibling;
+    	cur->nextSibling = temp->nextSibling;
+    	deleteTree(temp);
+	}
 }
 
 // hàm xóa các nhánh trên cây đọc vào từ bàn phím
@@ -291,15 +292,13 @@ void postOrderTraversal(TNODE* root) {
 // hàm đếm tổng số lượng nút trên cây
 int countTotalNodes(TNODE* root)
 {
-	// Code tại đây
-	if(root == NULL) return 0;
-	TNODE* q = root->firstChild;
-	int sum = 0;
-	while(q!=NULL){
-	    sum+=countTotalNodes(q);
-	    q = q->nextSibling;
-	}
-	return sum+1;
+    // code tại đây
+    if (root == NULL) return 0;
+    int ans = 1;
+    ans += countTotalNodes(root->firstChild);
+    ans += countTotalNodes(root->nextSibling);
+    
+    return ans;
 }
 
 // hàm đếm tổng số lượng nút lá trên cây
