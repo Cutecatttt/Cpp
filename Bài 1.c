@@ -92,7 +92,7 @@ void printData(struct Node* head)
                 printf("%.2lf x ", head->heSo);
             }
             else {
-                printf("x ");
+                printf(" x ");
             }
         }
         else {
