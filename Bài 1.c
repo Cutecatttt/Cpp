@@ -1,28 +1,27 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // định nghĩa 1 nút trong danh sách liên kết biểu diễn đa thức bậc n 
 struct Node
 {
-	double heSo;
-	int soMu;
-	struct Node* next;
+    double heSo;
+    int soMu;
+    struct Node* next;
 };
 
 /*
 hàm cấp phát động một nút mới của danh sách và gán giá trị khởi tạo cho nút
 */
-
 struct Node* createNewNode(double heSo, int soMu)
 {
-	struct Node* p = (struct Node*)malloc(sizeof(struct Node));
-	p->heSo = heSo;
-	p->soMu = soMu;
-	p->next = NULL;
+    struct Node* p = (struct Node*)malloc(sizeof(struct Node));
+    p->heSo = heSo;
+    p->soMu = soMu;
+    p->next = NULL;
 
-	return p;
+    return p;
 }
 
 /*
@@ -30,89 +29,88 @@ struct Node* createNewNode(double heSo, int soMu)
 */
 struct Node* copyNode(struct Node* nSource)
 {
-	struct Node* p = (struct Node*)malloc(sizeof(struct Node));
-	p->heSo = nSource->heSo;
-	p->soMu = nSource->soMu;
-	p->next = NULL;
+    struct Node* p = (struct Node*)malloc(sizeof(struct Node));
+    p->heSo = nSource->heSo;
+    p->soMu = nSource->soMu;
+    p->next = NULL;
 
-	return p;
+    return p;
 }
 
 /*
 Hàm nhập vào một đa thức bậc n với số mũ giảm dần
 */
-
 struct Node* readData()
 {
-	struct Node* head = NULL, * p, * last=NULL;
-	double heSo;
-	int soMu, nElement;
+    struct Node* head = NULL, * p, * last = NULL;
+    double heSo;
+    int soMu, nElement;
 
-	// doc vao so luong phan tu cua da thuc
-	scanf("%d", &nElement);
+    // doc vao so luong phan tu cua da thuc
+    scanf("%d", &nElement);
 
-	// doc vao tung phan tu
-	for(int i=0;i< nElement; i++){
-		scanf("%lf", &heSo);
-		scanf("%d", &soMu);
-		if (head == NULL) { // nếu đang rỗng thì thêm vào đầu
-			head = createNewNode(heSo, soMu);
-			last = head;
-		}
-		else { // ngược lại thêm vào cuối
-			p = createNewNode(heSo, soMu);
-			last->next = p;
-			last = p;
-		}
-	}
+    // doc vao tung phan tu
+    for (int i = 0; i < nElement; i++) {
+        scanf("%lf", &heSo);
+        scanf("%d", &soMu);
+        if (head == NULL) { // nếu đang rỗng thì thêm vào đầu
+            head = createNewNode(heSo, soMu);
+            last = head;
+        }
+        else { // ngược lại thêm vào cuối
+            p = createNewNode(heSo, soMu);
+            last->next = p;
+            last = p;
+        }
+    }
 
-	return head;
+    return head;
 }
 
 /**
 In đa thức bậc n hiện có
 */
-
 void printData(struct Node* head)
 {
-	printf("Content: ");
-	int n = 0;
-	while (head != NULL) {
-		if (n > 0 && head->heSo > 0) {
-			printf("+");
-		}
+    printf("Content: ");
+    int n = 0;
+    while (head != NULL) {
+        if (n > 0 && head->heSo > 0) {
+            printf("+");
+        }
 
-		if (head->soMu > 1) {
-			if(head->heSo!=1){
-				printf("%.2lf x^%d ", head->heSo, head->soMu);
-			}
-			else{
-				printf("x^%d ", head->soMu);
-			}
-		}
-		else if (head->soMu == 1) {
-			if (head->heSo != 1){
-				printf("%.2lf x ", head->heSo);
-			}
-			else {
-				printf(" x ");
-			}
-		}
-		else {
-			printf("%.2lf", head->heSo);
-		}
+        if (head->soMu > 1) {
+            if (head->heSo != 1) {
+                printf("%.2lf x^%d ", head->heSo, head->soMu);
+            }
+            else {
+                printf("x^%d ", head->soMu);
+            }
+        }
+        else if (head->soMu == 1) {
+            if (head->heSo != 1) {
+                printf("%.2lf x ", head->heSo);
+            }
+            else {
+                printf("x ");
+            }
+        }
+        else {
+            printf("%.2lf", head->heSo);
+        }
 
-		head = head->next;
-		n++;
-	}
-	printf("\n");
+        head = head->next;
+        n++;
+    }
+    printf("\n");
 }
 
-double power(double x, int k){
-    if(k == 0) return 1;
-    double ans = power(x,k/2);
-    if(k%2 == 1) return ans*ans;
-    return ans*ans*x;
+double power(double x, int k)
+{
+    if (k == 0) return 1;
+    double ans = power(x, k / 2);
+    if (k % 2 == 1) return ans * ans * x;
+    return ans * ans;
 }
 
 /*
@@ -120,14 +118,14 @@ double power(double x, int k){
 */
 double calculatePolynomialValue(struct Node* head, double x)
 {
-	double ans;
-	while(head != NULL){
-	    double a = head -> heSo;
-	    int b = head -> soMu;
-	    ans += a*power(x,b);
-	    head = head->next;
-	}
-	return ans;
+    double ans = 0;
+    while (head != NULL) {
+        double a = head->heSo;
+        int b = head->soMu;
+        ans += a * power(x, b);
+        head = head->next;
+    }
+    return ans;
 }
 
 /*
@@ -137,14 +135,14 @@ double calculatePolynomialValue(struct Node* head, double x)
 */
 void addElementLast(struct Node** pHead, struct Node** pLast, struct Node* newEle)
 {
-	if (*pLast == NULL) { // danh sách đang rỗng
-		*pLast = newEle;
-		*pHead = newEle;
-	}
-	else { // danh sách khác rỗng
-		(*pLast)->next = newEle;
-		(*pLast) = (*pLast)->next;
-	}
+    if (*pLast == NULL) { // danh sách đang rỗng
+        *pLast = newEle;
+        *pHead = newEle;
+    }
+    else { // danh sách khác rỗng
+        (*pLast)->next = newEle;
+        (*pLast) = (*pLast)->next;
+    }
 }
 /**
 * Hàm cộng đa thức và trả về đa thức tổng qua tên hàm (first + second)
@@ -152,34 +150,30 @@ void addElementLast(struct Node** pHead, struct Node** pLast, struct Node* newEl
 */
 struct Node* addPolynomial(struct Node* first, struct Node* second)
 {
-	// SINH VIÊN CODE TẠI ĐÂY
-	struct Node* res = NULL;
-	struct Node* lastRes = NULL;
-	while(first != NULL || second != NULL){
-        if( first->soMu > second->soMu || second==NULL)
-        {
-            struct Node* newNode = copyNode(first);
-            addElementLast(&res, &lastRes, newNode);
-            first = first -> next;
-        }
-        else if( second->soMu > first->soMu || first==NULL)
-        {
+    struct Node* res = NULL;
+    struct Node* lastRes = NULL;
+    while (first != NULL || second != NULL) {
+        if (first == NULL || (second != NULL && first->soMu < second->soMu)) {
             struct Node* newNode = copyNode(second);
             addElementLast(&res, &lastRes, newNode);
-            second = second -> next;
+            second = second->next;
         }
-        else
-        {
+        else if (second == NULL || (first != NULL && first->soMu > second->soMu)) {
+            struct Node* newNode = copyNode(first);
+            addElementLast(&res, &lastRes, newNode);
+            first = first->next;
+        }
+        else {
             double heso = first->heSo + second->heSo;
             int somu = first->soMu;
             first = first->next;
             second = second->next;
-            if(heso != 0){
-                struct Node* newNode = createNewNode(heso,somu);
+            if (heso != 0) {
+                struct Node* newNode = createNewNode(heso, somu);
                 addElementLast(&res, &lastRes, newNode);
             }
         }
-	}
+    }
     return res;
 }
 
@@ -188,59 +182,59 @@ struct Node* addPolynomial(struct Node* first, struct Node* second)
 */
 void addPolynomialToCurrentPlynomial(struct Node** target, struct Node* second)
 {
-	struct Node* first = *target, * preFirst = NULL;;
-	struct Node* pNew = NULL;
+    struct Node* first = *target, * preFirst = NULL;
+    struct Node* pNew = NULL;
 
-	while (first != NULL && second != NULL)
-	{
-		// Nếu số mũ của đa thức 1 lớn hơn
-		if (first->soMu > second->soMu) {
-			preFirst = first;
-			first = first->next;
-		}
-		else if (first->soMu == second->soMu) { // nếu số mũ bằng nhau
-			if (first->heSo + second->heSo != 0)
-			{
-				first->heSo = first->heSo + second->heSo;
-			}
-			preFirst = first;
-			first = first->next;
-			second = second->next;
-		}
-		else { // ngược lại, số mũ đa thức 1 hiện tại nhỏ hơn
-			pNew = copyNode(second);
-			second = second->next;
-			if (preFirst != NULL) { // thêm vào sau preFirst
-				pNew->next = first;
-				preFirst->next = pNew;
-				preFirst = pNew;
-			}
-			else { // thêm vào trước phần tử đầu đa thức 1 nếu nó đang nhỏ hơn
-				pNew->next = *target;
-				*target = pNew;
-				preFirst = pNew;
-			}
-		}
-	}
+    while (first != NULL && second != NULL)
+    {
+        // Nếu số mũ của đa thức 1 lớn hơn
+        if (first->soMu > second->soMu) {
+            preFirst = first;
+            first = first->next;
+        }
+        else if (first->soMu == second->soMu) { // nếu số mũ bằng nhau
+            if (first->heSo + second->heSo != 0)
+            {
+                first->heSo = first->heSo + second->heSo;
+            }
+            preFirst = first;
+            first = first->next;
+            second = second->next;
+        }
+        else { // ngược lại, số mũ đa thức 1 hiện tại nhỏ hơn
+            pNew = copyNode(second);
+            second = second->next;
+            if (preFirst != NULL) { // thêm vào sau preFirst
+                pNew->next = first;
+                preFirst->next = pNew;
+                preFirst = pNew;
+            }
+            else { // thêm vào trước phần tử đầu đa thức 1 nếu nó đang nhỏ hơn
+                pNew->next = *target;
+                *target = pNew;
+                preFirst = pNew;
+            }
+        }
+    }
 
-	// thêm nốt các phần tử còn lại của đa thức 2 vào
-	if (first == NULL) {
-		first = preFirst;
-	}
-	while (second != NULL) {
-		pNew = copyNode(second);
-		second = second->next;
+    // thêm nốt các phần tử còn lại của đa thức 2 vào
+    if (first == NULL) {
+        first = preFirst;
+    }
+    while (second != NULL) {
+        pNew = copyNode(second);
+        second = second->next;
 
-		// nếu danh sách ban đầu rỗng
-		if (*target == NULL) {
-			*target = pNew;
-			first = pNew;
-		}
-		else {
-			first->next = pNew;
-			first = first->next;
-		}		
-	}
+        // nếu danh sách ban đầu rỗng
+        if (*target == NULL) {
+            *target = pNew;
+            first = pNew;
+        }
+        else {
+            first->next = pNew;
+            first = first->next;
+        }
+    }
 }
 
 /*
@@ -249,35 +243,31 @@ void addPolynomialToCurrentPlynomial(struct Node** target, struct Node* second)
 */
 struct Node* subtractPolynomial(struct Node* first, struct Node* second)
 {
-    // SINH VIÊN CODE TẠI ĐÂY
-	struct Node* res = NULL;
-	struct Node* lastRes = NULL;
-	while(first != NULL || second != NULL){
-        if( first->soMu > second->soMu || second==NULL)
-        {
+    struct Node* res = NULL;
+    struct Node* lastRes = NULL;
+    while (first != NULL || second != NULL) {
+        if (first == NULL || (second != NULL && first->soMu < second->soMu)) {
+            struct Node* newNode = copyNode(second);
+            newNode->heSo = -(newNode->heSo);
+            addElementLast(&res, &lastRes, newNode);
+            second = second->next;
+        }
+        else if (second == NULL || (first != NULL && first->soMu > second->soMu)) {
             struct Node* newNode = copyNode(first);
             addElementLast(&res, &lastRes, newNode);
-            first = first -> next;
+            first = first->next;
         }
-        else if( second->soMu > first->soMu || first==NULL)
-        {
-            struct Node* newNode = copyNode(second);
-            newNode->heSo=-(newNode->heSo);
-            addElementLast(&res, &lastRes, newNode);
-            second = second -> next;
-        }
-        else
-        {
+        else {
             double heso = first->heSo - second->heSo;
             int somu = first->soMu;
             first = first->next;
             second = second->next;
-            if(heso != 0){
-                struct Node* newNode = createNewNode(heso,somu);
+            if (heso != 0) {
+                struct Node* newNode = createNewNode(heso, somu);
                 addElementLast(&res, &lastRes, newNode);
             }
         }
-	}
+    }
     return res;
 }
 
@@ -287,13 +277,15 @@ struct Node* subtractPolynomial(struct Node* first, struct Node* second)
 */
 struct Node* multiplyPolynomialWithNode(struct Node* head, struct Node* multiplier)
 {
-	double a = multiplier->heSo;
-	int b = multiplier->soMu;
-	while(head==NULL){
-	    head->heSo = a*(head->heSo);
-	    head->soMu = b+head->soMu;
-	}
-	return head;
+    struct Node* result = NULL, * lastRes = NULL;
+    double a = multiplier->heSo;
+    int b = multiplier->soMu;
+    while (head != NULL) {
+        struct Node* newNode = createNewNode(a * head->heSo, b + head->soMu);
+        addElementLast(&result, &lastRes, newNode);
+        head = head->next;
+    }
+    return result;
 }
 
 /*
@@ -301,13 +293,13 @@ struct Node* multiplyPolynomialWithNode(struct Node* head, struct Node* multipli
 */
 void freePolynomial(struct Node** head)
 {
-	struct Node* curNode = NULL;
-	while (*head != NULL)
-	{
-		curNode = *head;
-		*head = (*head)->next;
-		free(curNode);
-	}
+    struct Node* curNode = NULL;
+    while (*head != NULL)
+    {
+        curNode = *head;
+        *head = (*head)->next;
+        free(curNode);
+    }
 }
 
 /**
@@ -316,87 +308,87 @@ void freePolynomial(struct Node** head)
 */
 struct Node* multiplyTwoPolynomial(struct Node* first, struct Node* second)
 {
-	// SINH VIÊN CODE TẠI ĐÂY
-	struct Node* ans = NULL;
-	while(first!= NULL){
-	    ans = addPolynomial(ans,multiplyPolynomialWithNode(second,first));
-	    first= first->next;
-	}
-	return ans;
+    struct Node* ans = NULL;
+    while (first != NULL) {
+        struct Node* product = multiplyPolynomialWithNode(second, first);
+        addPolynomialToCurrentPlynomial(&ans, product);
+        freePolynomial(&product);
+        first = first->next;
+    }
+    return ans;
 }
-
 
 /*
 Test code
 */
 int main()
 {
-	char nextCommand[100];
-	int polyIndex;
-	struct Node *hPoly1=NULL, *hPoly2=NULL, *hPoly3, *aNode;
-	double x, heSo;
-	int soMu;
-	hPoly2 = readData();
-	while (1)
-	{
-		fgets(nextCommand, sizeof(nextCommand), stdin);
-		nextCommand[strcspn(nextCommand, "\r\n")] = 0;
-		if (strlen(nextCommand) == 0) continue;
-		if (nextCommand[0] != '?') break;
-		if (strcmp(&nextCommand[2], "readPolynomialExpression") == 0) {			
-			scanf("%d", &polyIndex);
-			if (polyIndex == 1) {
-				hPoly1 = readData();
-			}
-			else{
-				hPoly2 = readData();
-			}
-		}
-		else if (strcmp(&nextCommand[2], "printPolynomial") == 0) {
-			scanf("%d", &polyIndex);
-			if (polyIndex == 1) {
-				printData(hPoly1);
-			}
-			else {
-				printData(hPoly2);
-			}
-		}
-		else if (strcmp(&nextCommand[2], "calculatePolynomialValue") == 0) {
-			scanf("%d", &polyIndex);
-			scanf("%lf", &x);
-			if (polyIndex == 1) {
-				printf("Value of Polynomial at x= %.2lf is %.2lf\n",x, calculatePolynomialValue(hPoly1, x));
-			}
-			else {
-				printf("Value of Polynomial at x= %.2lf is %.2lf\n", x, calculatePolynomialValue(hPoly2, x));
-			}
-		}
-		else if (strcmp(&nextCommand[2], "addTwoPolynomial") == 0) {
-			hPoly3 = addPolynomial(hPoly1, hPoly2);
-			printData(hPoly3);
-			freePolynomial(&hPoly3);
-		}
-		else if (strcmp(&nextCommand[2], "subtractTwoPolynomial") == 0) {
-			hPoly3 = subtractPolynomial(hPoly1, hPoly2);
-			printData(hPoly3);
-			freePolynomial(&hPoly3);
-		}
-		else if (strcmp(&nextCommand[2], "multiplyTwoPolynomial") == 0) {
-			hPoly3 = multiplyTwoPolynomial(hPoly1, hPoly2);
-			printData(hPoly3);
-			freePolynomial(&hPoly3);
-		}
-		else if (strcmp(&nextCommand[2], "multiplyPolynomialWithOperand") == 0) {
-			scanf("%lf%d", &heSo, &soMu);
-			aNode = createNewNode(heSo,soMu);
-			hPoly3 = multiplyPolynomialWithNode(hPoly1, aNode);
-			printData(hPoly3);
-			freePolynomial(&hPoly3);
-			freePolynomial(&aNode);
-		}
-	}
+    char nextCommand[100];
+    int polyIndex;
+    struct Node* hPoly1 = NULL, * hPoly2 = NULL, * hPoly3, * aNode;
+    double x, heSo;
+    int soMu;
+    hPoly2 = readData();
+    while (1)
+    {
+        fgets(nextCommand, sizeof(nextCommand), stdin);
+        nextCommand[strcspn(nextCommand, "\r\n")] = 0;
+        if (strlen(nextCommand) == 0) continue;
+        if (nextCommand[0] != '?') break;
+        if (strcmp(&nextCommand[2], "readPolynomialExpression") == 0) {
+            scanf("%d", &polyIndex);
+            if (polyIndex == 1) {
+                hPoly1 = readData();
+            }
+            else {
+                hPoly2 = readData();
+            }
+        }
+        else if (strcmp(&nextCommand[2], "printPolynomial") == 0) {
+            scanf("%d", &polyIndex);
+            if (polyIndex == 1) {
+                printData(hPoly1);
+            }
+            else {
+                printData(hPoly2);
+            }
+        }
+        else if (strcmp(&nextCommand[2], "calculatePolynomialValue") == 0) {
+            scanf("%d", &polyIndex);
+            scanf("%lf", &x);
+            if (polyIndex == 1) {
+                printf("Value of Polynomial at x= %.2lf is %.2lf\n", x, calculatePolynomialValue(hPoly1, x));
+            }
+            else {
+                printf("Value of Polynomial at x= %.2lf is %.2lf\n", x, calculatePolynomialValue(hPoly2, x));
+            }
+        }
+        else if (strcmp(&nextCommand[2], "addTwoPolynomial") == 0) {
+            hPoly3 = addPolynomial(hPoly1, hPoly2);
+            printData(hPoly3);
+            freePolynomial(&hPoly3);
+        }
+        else if (strcmp(&nextCommand[2], "subtractTwoPolynomial") == 0) {
+            hPoly3 = subtractPolynomial(hPoly1, hPoly2);
+            printData(hPoly3);
+            freePolynomial(&hPoly3);
+        }
+        else if (strcmp(&nextCommand[2], "multiplyTwoPolynomial") == 0) {
+            hPoly3 = multiplyTwoPolynomial(hPoly1, hPoly2);
+            printData(hPoly3);
+            freePolynomial(&hPoly3);
+        }
+        else if (strcmp(&nextCommand[2], "multiplyPolynomialWithOperand") == 0) {
+            scanf("%lf%d", &heSo, &soMu);
+            aNode = createNewNode(heSo, soMu);
+            hPoly3 = multiplyPolynomialWithNode(hPoly1, aNode);
+            printData(hPoly3);
+            freePolynomial(&hPoly3);
+            free(aNode);
+        }
+    }
 
-	freePolynomial(&hPoly1);
-	freePolynomial(&hPoly2);
-	return 0;
+    freePolynomial(&hPoly1);
+    freePolynomial(&hPoly2);
+    return 0;
 }
